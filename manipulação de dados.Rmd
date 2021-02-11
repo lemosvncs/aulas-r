@@ -1,0 +1,210 @@
+---
+title: "R Manipulação de Dados"
+output: html_notebook
+---
+
+# Basicão das funções
+
+Toda função tem um nome seguido de um parênteses. Dentro dos parênteses entram os "argumentos". Os argumentos são os parâmetros necessários para se computar a função. No corpo da função, entre chaves, entra o que a função irá fazer. Ex.:
+
+```{r}
+hipotenusa <- function(cateto_a = 1, cateto_b = 1){
+  #corpo da função
+  c_q = cateto_a^2 + cateto_b^2
+  return(sqrt(c_q))
+}
+```
+
+```{r}
+hipotenusa(cateto_a = 4, cateto_b = 3)
+hipotenusa(4, 3)
+```
+$ <- $ é o sinal de atribuição. Ele pega tudo que está à direita e atribui ao objeto que está na esquerda (e cria esse objeto caso ele não exista).
+
+É igual a isso:
+
+```{r}
+assign("x", c(9, 2, 5090, 2323))
+print(x)
+```
+
+# Tipos de dados
+
+## Vetor
+
+Vetor é a estrutura mais básica do R:
+
+```{r Vetor}
+x <- c(1, 2, 4, 19, 0)
+print(x)
+```
+
+$ c() $ é uma função que serve pra "juntar" vetores que são colocados como argumentos desta função.
+
+$ print() $ é uma função para mostrar o conteúdo do objeto no terminal. No caso do RMarkdown, ele só te mostra o resultado debaixo do "chunk".
+
+### Tipos de vetores
+
+Vetores sempre guardam informação de um único tipo.
+
+Numérica:
+
+```{r}
+
+```
+
+Caracteres:
+```{r}
+
+```
+
+Booleano:
+```{r}
+
+```
+
+Se você passar como argumentos informações de tipos diferentes, o R vai usar o tipo mais genérico:
+
+```{r}
+c(TRUE, 1, "ASD")
+```
+```{r}
+c(TRUE, 1, FALSE, 0, 0)
+```
+
+# Seleção de dados em vetores
+
+Você pode selecionar dados dentro de vetores de diferentes formas:
+
+## Através de uma numeração
+
+```{r}
+v <- rep(1:10)
+
+v[c(4, 5)]
+
+v[-c(4, 5)] # tudo menos
+```
+
+## Através de um vetor lógico
+
+```{r}
+v <- c(1:5) # uma forma de criar sequências
+
+# somente os dois primeiros valores:
+v[c(TRUE, TRUE, FALSE, FALSE, FALSE)]
+
+# cor sim cor não
+v[c(TRUE, FALSE)] # repetir o vetor enquanto existirem elementos
+```
+
+```{r}
+# por lógica:
+v[v >= 2]
+
+#==
+vetor_logico <- v >= 2
+print(vetor_logico)
+v[vetor_logico]
+
+#==
+v[FALSE, TRUE, TRUE, TRUE, TRUE]
+```
+
+Muito útil pra limpar missing. $ is.na() $ é uma função que retorna um vetor lógico com $ TRUE $ pra tudo que for $ NA $. Sendo que $ NA $ é um tipo especial no R que designa um dado faltante. A gente pode pedir para inverter essa função, pedindo tudo aquilo que **não** é $ NA $ colocando um sinal de exclamação antes.
+
+```{r}
+v <- c(1, 1, 1, 5, 1, 3, 5, NA, 1, 4, 1, 5, 1)
+v[!is.na(v)]
+
+is.na(v)
+```
+
+## Matrizes
+
+São basicamente vetores bidimensionais.
+
+```{r}
+neo = matrix(data = c(1:10), nrow = 2, ncol = 5, byrow = TRUE)
+print(neo)
+neo[1, 2] # linha, coluna
+```
+
+## Fatores
+
+Uma maneira de lidar com dados categóricos (possui "labels" para diferentes níveis das variáveis)
+
+```{r}
+fatores <- factor(x = rep(1:2, 10), levels = c(1,2), labels = letters[1:2])
+
+print(fatores)
+levels(fatores)
+as.numeric(fatores)
+```
+
+
+## Listas
+
+Basicamente um vetor que pode juntar vários tipos de elementos.
+
+```{r}
+lista <- list(neo, fatores)
+
+lista[[1]]
+lista[[2]]
+names(lista) = c("neo", "fatores")
+lista$neo
+```
+
+## Data frames
+
+Basicamente uma matriz onde os elementos podem ser de diferentes tipos. Quase uma tabela do excel.
+
+Existem outros tipos de dados em pacotes externos. Como um data.frame um pouco mais robusto do "ftable" ou uma maneira de lidar com dados textuais, o "tidytext".
+
+```{r}
+library(psych)
+data("bfi")
+bfi
+```
+
+
+### Subseleção no DataFrame
+
+Selecionando as variáveis pelo nome.
+```{r}
+colnames(bfi) # nomes das colunas
+bfi$A1 # vai gerar um vetor só com os dados daquela coluna
+```
+Então podemos aplicar a mesma lógica usada nos vetores:
+
+```{r}
+bfi$A1[!is.na(bfi$A1)]
+# lembrando que !is.na(bfi$A1)
+# nada mais é que um vetor lógico
+# indicando os casos que vão ser mostrados ou não
+
+bfi$A1[bfi$A1 > 3 & !is.na(bfi$A1)]
+```
+
+Também podemos selecionar por linhas e colunas:
+```{r}
+bfi[1:5, 1]
+bfi[1:3, 1:5]
+```
+
+E podemos ir criando data.frames menores só com as coisas que vamos utilizar:
+```{r}
+amabilidade = bfi[, c("A1", "A2", "A3", "A4", "A5")]
+cor(amabilidade, use = 'pairwise.complete.obs')
+```
+
+### Computando média de fatores
+```{r}
+summary(bfi$A1)
+bfi$amabilidade = (bfi$A1 + bfi$A2 + bfi$A3 + bfi$A4 + bfi$A5)/5
+head(bfi$amabilidade)
+
+bfi$ama = rowMeans(bfi[, 1:5], na.rm = TRUE)
+head(bfi$ama)
+```
