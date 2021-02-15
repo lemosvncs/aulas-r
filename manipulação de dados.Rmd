@@ -259,3 +259,4 @@ head(bfi$amabilidade)
 bfi$ama = rowMeans(bfi[, 1:5], na.rm = TRUE)
 head(bfi$ama)
 ```
+

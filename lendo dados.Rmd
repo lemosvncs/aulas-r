@@ -1,0 +1,31 @@
+---
+title: "Ler coisas"
+output: html_notebook
+---
+
+# CSV
+
+```{r}
+csv1 <- read.csv("bfi.csv")
+csv2 <- read.csv2("bfi.csv")
+```
+
+# EXCEL
+```{r}
+xlsx1 <- read.xlsx("bfi.xlsx", sheetIndex = 1)
+xlsx1[xlsx1 == 999] <- NA
+
+xlsx2 <- read.xlsx2("bfi.xlsx")
+
+
+```
+
+# SPSS
+```{r}
+spss <- read.spss('bfi.sav')
+spssF <- foreign::read.spss('bfi.sav')
+```
+
+
+
+
