@@ -14,13 +14,12 @@ library(help = "utils")
 Funções úteis principalmente quando estamos rodando scripts fora de um projeto. Dentro de projetos o diretório de trabalho (wd) é o local do projeto.
 ```{r}
 getwd()
-setwd("C:/Users/Trabalho/Documents/GitHub/aulas-r-grabriel")
+setwd("D:/Backups/GitHub/aulas-r-grabriel")
 ```
 
 # Gerenciar Pacotes
 ```{r}
-
-install.packages()
+install.packages("psych")
 installed.packages()
 update.packages()
 
@@ -35,13 +34,13 @@ unloadNamespace(psych) # pode ser útil se tiverem dois pacotes com funções de
 # Ajuda
 
 ```{r}
+library(psych)
 help(topic = corr.test, package = psych)
 help(corr.test)
 ?corr.test
 ```
 
 # Leitura de dados
-
 ```{r}
 read.csv()
 read.csv2()
@@ -72,6 +71,7 @@ as.POSIXct()
 
 ```{r}
 saveRDS()
+readRDS()
 ```
 
 
